@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header__logo">
+                <a href="/">TalentQuery</a>
+            </div>
+            <div class="header__toggle" id="navToggle">
+                <i class="fas fa-bars"></i>
+            </div>
+            <nav class="header__nav" id="mainNav">
+                <ul>
+                    <li><a href="/" class="<%= typeof page !== 'undefined' && page === 'home' ? 'active' : '' %>">Home</a></li>
+                    <li><a href="/candidates" class="<%= typeof page !== 'undefined' && page === 'candidates' ? 'active' : '' %>">For Candidates</a></li>
+                    <li><a href="/employers" class="<%= typeof page !== 'undefined' && page=== 'employers' ? 'active' : '' %>">For Employers</a></li>
+                    <li><a href="/candidates/jobs" class="<%= typeof page !== 'undefined' && page === 'jobs' ? 'active' : '' %>">Jobs</a></li>
+                    <li><a href="/blog" class="<%= typeof page !== 'undefined' && page === 'blog' ? 'active' : '' %>">Blog</a></li>
+                    <li><a href="/about" class="<%= typeof page !== 'undefined' && page === 'about' ? 'active' : '' %>">About</a></li>
+                    <li><a href="/contact" class="<%= typeof page !== 'undefined' && page === 'contact' ? 'active' : '' %>">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <%- body %>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col col-md-6 col-sm-12">
+                    <div class="footer__logo">TalentQuery</div>
+                    <p>We're not just recruiters, we're your strategic partners in assembling the tech dream team that will propel your business forward.</p>
+                    <div class="footer__social">
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+                <div class="col col-md-3 col-sm-6">
+                    <h3 class="footer__title">Quick Links</h3>
+                    <ul class="footer__links">
+                        <li><a href="/">Home</a></li>
+                        <li><a href="/candidates">For Candidates</a></li>
+                        <li><a href="/employers">For Employers</a></li>
+                        <li><a href="/candidates/jobs">Jobs</a></li>
+                        <li><a href="/blog">Blog</a></li>
+                    </ul>
+                </div>
+                <div class="col col-md-3 col-sm-6">
+                    <h3 class="footer__title">Contact Us</h3>
+                    <div class="footer__contact">
+                        <i class="fas fa-envelope"></i> info@talentquery.io
+                    </div>
+                    <div class="footer__contact">
+                        <i class="fab fa-whatsapp"></i> +525573951699
+                    </div>
+                    <div class="footer__contact">
+                        <i class="fas fa-calendar"></i> <a href="#">Book a videocall with us!</a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer__bottom">
+                <p>&copy; <%= new Date().getFullYear() %> TalentQuery. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="/js/main.js"></script>
+</body>
+</html>

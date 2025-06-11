@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>List of jobs</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero__content">
+                <h1>Input new job</h1>
+                <p>We're not just recruiters, we're your strategic partners in assembling the tech dream team that will propel your business forward.</p>
+            </div>
+        </div>
+    </section>
+   
+    <div class="container">
+        <h1>All Jobs</h1>
+        <% if (jobs && jobs.length > 0) { %>
+            <ul>
+                <% jobs.forEach(function(job) { %>
+                    <li>
+                        <h2><%= job.title %></h2>
+                        <p><%= job.company %></p>
+                        <p><%= job.location %></p>
+                        <p><%= job.description %></p>
+                        <a href="/jobs/<%= job.id %>">More</a>
+                    </li>
+                <% }); %>
+            </ul>
+        <% } else { %>
+            <p>There is not available jobs yet.</p>
+        <% } %>
+        <a href="/jobs/add">Add new job</a>
+    </div>
+</body>
+</html>

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+ <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero__content">
+                <h1>Browse Jobs</h1>
+                <p>Find your next opportunity in the tech industry.</p>
+            </div>
+        </div>
+    </section>
+      
+<div class="container mt-5">
+    
+    <h1></h1>
+    <p class="lead"></p>
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <form action="/candidates/jobs" method="GET" class="d-flex">
+                <input type="text" name="search" class="form-control me-2" placeholder="Search jobs..." value="<%= typeof search !== 'undefined' ? search : '' %>">
+                <button type="submit" class="btn btn-primary">Search</button>
+            </form>
+        </div>
+        <div class="col-md-6 text-md-end">
+            <div class="btn-group">
+                <button type="button" class="btn btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown">
+                    Filter by
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="/candidates/jobs?filter=latest">Latest Jobs</a></li>
+                    <li><a class="dropdown-item" href="/candidates/jobs?filter=fulltime">Full-time</a></li>
+                    <li><a class="dropdown-item" href="/candidates/jobs?filter=parttime">Part-time</a></li>
+                    <li><a class="dropdown-item" href="/candidates/jobs?filter=remote">Remote</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+    <% if (typeof jobs !== 'undefined' && jobs.length > 0) { %>
+        <% jobs.forEach(job => { %>
+            <div class="card mb-3">
+                <div class="card-body">
+              <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <h5 class="card-title"><%= job.title %></h5>
+                            <h6 class="card-subtitle mb-2 text-muted"><%= job.company %> • <%= job.location %></h6>
+                        </div>
+                        <span class="badge bg-primary"><%= job.job_type %></span>
+                    </div>
+                    <p class="card-text mt-3"><%= job.description.substring(0, 200) %>...</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <small class="text-muted">Posted on <%= new Date(job.created_at).toLocaleDateString() %></small>
+                        <div>
+                            <a href="/jobs/<%= job.id %>" class="btn btn-outline-primary btn-sm me-2">View Details</a>
+                            <a href="/candidates/apply/<%= job.id %>" class="btn btn-primary btn-sm">Apply Now</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <% }); %>
+    <% } else { %>
+        <div class="alert alert-info">
+            No jobs found matching your criteria. Please try a different search or check back later.
+        </div>
+    <% } %>
+</div>
+</body>
+</html>

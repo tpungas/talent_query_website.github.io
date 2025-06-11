@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= job.title %> - Details</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+     <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero__content">
+                <h1>Meet Talent Query</h1>
+                <p>We're not just recruiters, we're your strategic partners in assembling the tech dream team that will propel your business forward.</p>
+                <div class="d-flex">
+                    <a href="/candidates" class="btn btn-secondary mr-2">For Candidates</a>
+                    <a href="/employers" class="btn btn-outline">For Employers</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="container">
+        <% if (job) { %>
+            <h1><%= job.title %></h1>
+            <p><strong>Company:</strong> <%= job.company %></p>
+            <p><strong>Address:</strong> <%= job.location %></p>
+            <p><strong>Description:</strong></p>
+            <p><%= job.description %></p>
+            <button>Apply now</button>
+        <% } else { %>
+            <p>Job is not found.</p>
+        <% } %>
+        <a href="/jobs">Back to job's list</a>
+    </div>
+</body>
+</html>

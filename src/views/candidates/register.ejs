@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero__content">
+                <h1>Candidate Registration</h1>
+                <p>Register your talent!</p>
+            </div>
+        </div>
+    </section>
+      
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h2></h2>
+                </div>
+                <div class="card-body">
+                    <form action="/candidates/register" method="POST" enctype="multipart/form-data">
+                        <div class="mb-3">
+                            <label for="fullName" class="form-label">Full Name *</label>
+                            <input type="text" class="form-control" id="fullName" name="fullName" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email Address *</label>
+                            <input type="email" class="form-control" id="email" name="email" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Password *</label>
+                            <input type="password" class="form-control" id="password" name="password" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="confirmPassword" class="form-label">Confirm Password *</label>
+                            <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="photo" class="form-label">Profile Photo</label>
+                            <input type="file" class="form-control" id="photo" name="candidate_photo" accept="image/*">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="cv" class="form-label">CV/Resume</label>
+                            <input type="file" class="form-control" id="cv" name="candidate_cv" accept=".pdf,.doc,.docx">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="expectedSalary" class="form-label">Expected Salary</label>
+                            <input type="text" class="form-control" id="expectedSalary" name="expectedSalary" placeholder="e.g., $50,000 - $70,000">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="skills" class="form-label">Skills (comma separated)</label>
+                            <textarea class="form-control" id="skills" name="skills" rows="3" placeholder="e.g., JavaScript, React, Node.js"></textarea>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary">Register</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero__content">
+                <h1>Blog</h1>
+                <p>We're not just recruiters, we're your strategic partners in assembling the tech dream team that will propel your business forward.</p>
+            </div>
+        </div>
+    </section>
+<div class="container mt-5">
+    <h1>Edit the post: <%= post.title %></h1>
+    <form action="/blog/<%= post.id %>/edit" method="POST" enctype="multipart/form-data">
+        <div class="mb-3">
+            <label for="title" class="form-label">Title</label>
+            <input type="text" class="form-control" id="title" name="title" value="<%= post.title %>" required>
+        </div>
+        <div class="mb-3">
+            <label for="summary" class="form-label">Short description</label>
+            <textarea class="form-control" id="summary" name="summary" rows="3" required><%= post.summary %></textarea>
+        </div>
+        <div class="mb-3">
+            <label for="content" class="form-label">Content</label>
+            <textarea class="form-control" id="content" name="content" rows="10" required><%= post.content %></textarea>
+        </div>
+        <div class="mb-3">
+            <label for="blog_image" class="form-label">Image (leave blank to not change)</label>
+            <input class="form-control" type="file" id="blog_image" name="blog_image" accept="image/*">
+            <% if (post.image_path) { %>
+                <small class="form-text text-muted">Current image: <img src="<%= post.image_path %>" alt="Current Image" style="max-width: 100px; height: auto;"></small>
+            <% } %>
+        </div>
+        <button type="submit" class="btn btn-primary">Update the post</button>
+        <a href="/blog/<%= post.id %>" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+</body>
+</html>

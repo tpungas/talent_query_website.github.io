@@ -1,0 +1,28 @@
+# docker-compose.yml
+version: '3.8'
+
+services:
+  app:
+    build: . # Предполагаем, что у вас есть Dockerfile для вашего приложения
+    ports:
+      - "${PORT}:${PORT}" # Используем переменную PORT из .env
+    environment:
+      # Эти переменные будут доступны внутри контейнера 'app'
+      # Docker Compose автоматически подставит значения из .env
+      - DB_HOST=${DB_HOST}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_NAME=${DB_NAME}
+    depends_on:
+      - db
+
+  db:
+    image: mysql:8
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD} # Также используем переменную из .env
+      MYSQL_DATABASE: ${DB_NAME}         # И эту тоже
+    volumes:
+      - db_data:/var/lib/mysql
+
+volumes:
+  db_data:

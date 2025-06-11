@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero__content">
+                <h1>About Us</h1>
+                <p>We're not just recruiters, we're your strategic partners in assembling the tech dream team that will propel your business forward.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Information Section -->
+    <section class="section">
+        <div class="container">
+            <div class="row">
+                <div class="col col-md-6 col-sm-12">
+                    <h2>Who we are</h2>
+                    <p>Founded in 2024, TalentQuery is committed to connecting exceptional talent with visionary companies. Our strength comes from the minds and hearts of our team, each of them providing their talents, experience, vision, and dreams.</p>
+                    
+                    <div class="contact-info mt-4">
+                        <div class="contact-info__item">
+                            <div class="contact-info__icon">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                            <div class="contact-info__content">
+                                <h4>Email</h4>
+                                <p>We are available during business hours to answer your questions.</p>
+                                <a href="mailto:info@talentquery.io">info@talentquery.io</a>
+                            </div>
+                        </div>
+                        
+                        <div class="contact-info__item">
+                            <div class="contact-info__icon">
+                                <i class="fab fa-whatsapp"></i>
+                            </div>
+                            <div class="contact-info__content">
+                                <h4>WhatsApp</h4>
+                                <p>Connect with us via messaging for a prompt response.</p>
+                                <a href="https://wa.me/525573951699">+525573951699</a>
+                            </div>
+                        </div>
+                        
+                        <div class="contact-info__item">
+                            <div class="contact-info__icon">
+                                <i class="fab fa-linkedin"></i>
+                            </div>
+                            <div class="contact-info__content">
+                                <h4>Social Media</h4>
+                                <p>Let's connect, meet, and interact on LinkedIn!</p>
+                                <a href="#" target="_blank">LinkedIn Profile</a>
+                            </div>
+                        </div>
+                        
+                        <div class="contact-info__item">
+                            <div class="contact-info__icon">
+                                <i class="fas fa-calendar-alt"></i>
+                            </div>
+                            <div class="contact-info__content">
+                                <h4>Calendar</h4>
+                                <p>Let's talk about your needs. No compromise!</p>
+                                <a href="#" target="_blank">Book a videocall with us!</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col col-md-6 col-sm-12">
+                    <div class="card">
+                        <div class="card__content">
+                            <h2>Send Us a Message</h2>
+                            <form class="form" action="/contact/submit" method="POST">
+                                <div class="form__group">
+                                    <label class="form__label" for="name">Full Name *</label>
+                                    <input class="form__input" type="text" id="name" name="name" required>
+                                </div>
+                                
+                                <div class="form__group">
+                                    <label class="form__label" for="email">Email Address *</label>
+                                    <input class="form__input" type="email" id="email" name="email" required>
+                                </div>
+                                
+                                <div class="form__group">
+                                    <label class="form__label" for="phone">Phone Number</label>
+                                    <input class="form__input" type="tel" id="phone" name="phone">
+                                </div>
+                                
+                                <div class="form__group">
+                                    <label class="form__label" for="subject">Subject *</label>
+                                    <input class="form__input" type="text" id="subject" name="subject" required>
+                                </div>
+                                
+                                <div class="form__group">
+                                    <label class="form__label" for="message">Message *</label>
+                                    <textarea class="form__input form__input--textarea" id="message" name="message" rows="5" required></textarea>
+                                </div>
+                                
+                                <div class="form__group">
+                                    <button type="submit" class="btn btn-primary w-100">Send Message</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Office Locations Section -->
+    <section class="section section--alt">
+        <div class="container">
+            <div class="section__header">
+                <h2>Our Locations</h2>
+                <p>We have a presence in key tech hubs across Latin America.</p>
+            </div>
+            
+            <div class="row">
+                <div class="col col-md-4 col-sm-12">
+                    <div class="card">
+                        <div class="card__content">
+                            <h3 class="card__title">Mexico</h3>
+                            <p>Monterrey • Mexico City • Guadalajara • Mérida</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col col-md-4 col-sm-12">
+                    <div class="card">
+                        <div class="card__content">
+                            <h3 class="card__title">Colombia</h3>
+                            <p>Bogotá • Medellín</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col col-md-4 col-sm-12">
+                    <div class="card">
+                        <div class="card__content">
+                            <h3 class="card__title">Other Locations</h3>
+                            <p>Buenos Aires • Santiago • San José</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="section">
+        <div class="container">
+            <div class="section__header">
+                <h2>Frequently Asked Questions</h2>
+                <p>Find answers to common questions about our services.</p>
+            </div>
+            
+            <div class="faq">
+                <div class="faq__item">
+                    <h3 class="faq__question">How does your recruitment process work?</h3>
+                    <div class="faq__answer">
+                        <p>Our recruitment process follows a strategic approach: we align recruitment processes to specific needs, source and screen candidates using top technology, conduct thorough selection with technical and soft skills assessments, and support the hiring process including job offer negotiation and onboarding.</p>
+                    </div>
+                </div>
+                
+                <div class="faq__item">
+                    <h3 class="faq__question">What industries do you specialize in?</h3>
+                    <div class="faq__answer">
+                        <p>We specialize in IT and tech roles for tech startups, including positions in development, data science, AI, infrastructure, design, management, and quality assurance.</p>
+                    </div>
+                </div>
+                
+                <div class="faq__item">
+                    <h3 class="faq__question">How long does it typically take to fill a position?</h3>
+                    <div class="faq__answer">
+                        <p>We present the first candidates in 3 days, and our premium time to fill is typically 1-3 weeks, depending on the complexity and specificity of the role.</p>
+                    </div>
+                </div>
+                
+                <div class="faq__item">
+                    <h3 class="faq__question">What is your guarantee policy?</h3>
+                    <div class="faq__answer">
+                        <p>All our recruitment plans include a 3-month guarantee. You only pay upon offer acceptance, ensuring you get the right talent for your team.</p>
+                    </div>
+                </div>
+                
+                <div class="faq__item">
+                    <h3 class="faq__question">Do you offer staff augmentation services?</h3>
+                    <div class="faq__answer">
+                        <p>Yes, we offer staffing augmentation services that allow you to integrate high-level professionals into your team for defined projects or periods, without the costs and risks of traditional hiring.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="section section--alt">
+        <div class="container">
+            <div class="section__header">
+                <h2>Ready to Connect?</h2>
+                <p>Let's discuss how we can help you find the perfect talent or opportunity.</p>
+            </div>
+            <div class="text-center">
+                <a href="#" class="btn btn-primary btn-lg">Book a Consultation</a>
+            </div>
+        </div>
+    </section>
+</body>
+</html>

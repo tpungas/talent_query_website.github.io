@@ -1,0 +1,52 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero__content">
+                <h1>Blog</h1>
+                <p>We're not just recruiters, we're your strategic partners in assembling the tech dream team that will propel your business forward.</p>
+            </div>
+        </div>
+    </section>
+<div class="container mt-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Welcome to the Blog!</h1>
+
+        <a href="/blog/new" class="btn btn-primary">Create a new post</a>
+    </div>
+
+    <% if (posts && posts.length > 0) { %>
+        <div class="row">
+            <% posts.forEach(function(post) { %>
+                <div class="col-md-6 mb-4">
+                    <div class="card">
+                        <% if (post.image_path) { %>
+                            <img src="<%= post.image_path %>" class="card-img-top" alt="<%= post.title %>" style="max-height: 200px; object-fit: cover;">
+                        <% } %>
+                        <div class="card-body">
+                            <h5 class="card-title"><a href="/blog/<%= post.id %>"><%= post.title %></a></h5>
+                            <p class="card-text"><%= post.summary %></p>
+                            <p class="card-text"><small class="text-muted">Published: <%= new Date(post.created_at).toLocaleDateString() %></small></p>
+                            <a href="/blog/<%= post.id %>" class="btn btn-secondary btn-sm">Read more</a>
+                        </div>
+                    </div>
+                </div>
+            <% }); %>
+        </div>
+    <% } else { %>
+        <p>There are no blog posts yet. <a href="/blog/new">Create the first one!</a></p>
+    <% } %>
+</div>
+</body>
+</html>
