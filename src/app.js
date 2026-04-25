@@ -33,6 +33,11 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('layout', 'layout');
 
 // --- DATABASE CONNECTION ---
+
+console.log('--- DEBUG INFO ---');
+console.log('MYSQLHOST:', process.env.MYSQLHOST ? 'Detected' : 'NOT FOUND');
+console.log('MYSQLPORT:', process.env.MYSQLPORT);
+console.log('------------------');
 const dbConfig = {
   host: process.env.MYSQLHOST,
   user: process.env.MYSQLUSER,
