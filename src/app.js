@@ -38,7 +38,7 @@ const dbConfig = {
   user: process.env.MYSQLUSER || 'root',
   password: process.env.MYSQLPASSWORD || '',
   database: process.env.MYSQLDATABASE || 'talent_query_db',
-  port: process.env.MYSQLPORT || 3306,
+  port: Number(process.env.MYSQLPORT) || 4000,
   ssl: {
     minVersion: 'TLSv1.2',
     rejectUnauthorized: true
