@@ -34,11 +34,11 @@ app.set('layout', 'layout');
 
 // --- DATABASE CONNECTION ---
 const dbConfig = {
-  host: process.env.MYSQLHOST || 'localhost',
-  user: process.env.MYSQLUSER || 'root',
-  password: process.env.MYSQLPASSWORD || '',
-  database: process.env.MYSQLDATABASE || 'talent_query_db',
-  port: Number(process.env.MYSQLPORT) || 4000,
+  host: process.env.MYSQLHOST,
+  user: process.env.MYSQLUSER,
+  password: process.env.MYSQLPASSWORD,
+  database: process.env.MYSQLDATABASE,
+  port: Number(process.env.MYSQLPORT),
   ssl: {
     minVersion: 'TLSv1.2',
     rejectUnauthorized: true
