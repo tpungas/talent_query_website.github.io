@@ -954,3 +954,9 @@ a:hover {
 .ml-3 {
   margin-left: 1rem;
 }
+
+.btn-secondary {
+    background-color: #2e5a4c !important; /* Твой зеленый/серый цвет */
+    color: #ffffff !important;            /* Белый текст */
+    opacity: 1 !important;
+}
