@@ -930,6 +930,23 @@ a:hover {
   }
 }
 
+/* Убираем разницу между кнопками */
+.btn-secondary, 
+.btn-secondary:visited, 
+.btn-secondary:active {
+    color: #ffffff !important; /* Белый цвет текста */
+    background-color: #6c757d !important; /* Стандартный серый фон */
+    display: inline-block;
+    opacity: 1 !important;
+}
+
+/* Цвет при наведении (чтобы не пропадал) */
+.btn-secondary:hover {
+    color: #ffffff !important;
+    background-color: #5a6268 !important;
+}
+
+
 /* Additional utility classes */
 .mr-2 {
   margin-right: 0.5rem;
