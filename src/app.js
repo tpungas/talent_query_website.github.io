@@ -10,7 +10,7 @@ const expressLayouts = require('express-ejs-layouts');
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 10000; // Render использует 10000
+const PORT = process.env.PORT || 10000;
 
 // Middleware
 app.use(cors());
@@ -32,12 +32,8 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 app.set('layout', 'layout');
 
-// --- DATABASE CONNECTION ---
+// --- DATABASE CONNECTION (FIXED FOR RENDER/TiDB) ---
 
-console.log('--- DEBUG INFO ---');
-console.log('MYSQLHOST:', process.env.MYSQLHOST ? 'Detected' : 'NOT FOUND');
-console.log('MYSQLPORT:', process.env.MYSQLPORT);
-console.log('------------------');
 const dbConfig = {
   host: process.env.MYSQLHOST,
   user: process.env.MYSQLUSER,
@@ -50,7 +46,7 @@ const dbConfig = {
   }
 };
 
-// --- ВОТ СЮДА ВСТАВЛЯЕМ POOL ---
+// Создаем пул соединений вместо одиночного db
 const pool = mysql.createPool({
   ...dbConfig,
   waitForConnections: true,
@@ -60,6 +56,20 @@ const pool = mysql.createPool({
   keepAliveInitialDelay: 10000
 });
 
+// Проверка подключения (выведется в логи Render)
+pool.getConnection((err, connection) => {
+  if (err) {
+    console.error('--- DATABASE ERROR ---');
+    console.error(err);
+  } else {
+    console.log('Successfully connected to TiDB Cloud via Pool!');
+    connection.release();
+  }
+});
+
+// СУПЕР-ВАЖНО: Делаем пул доступным для всех твоих роутов
+// Мы заменяем старую переменную 'db' этим пулом
+global.db = pool;
 
 // --- Routes ---
 const indexRoutes = require('./routes/index');
