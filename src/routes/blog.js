@@ -7,17 +7,7 @@ const mysql = require('mysql2');
 const fs = require('fs');
 
 // Database connection
-const db = mysql.createConnection({
-  host: process.env.MYSQLHOST,
-  user: process.env.MYSQLUSER,
-  password: process.env.MYSQLPASSWORD,
-  database: process.env.MYSQLDATABASE,
-  port: Number(process.env.MYSQLPORT) || 4000,
-  ssl: {
-    minVersion: 'TLSv1.2',
-    rejectUnauthorized: true
-  }
-});
+const db = global.db;
 
 // Configure multer for file uploads
 const storage = multer.diskStorage({
