@@ -50,8 +50,15 @@ const dbConfig = {
   }
 };
 
-const db = mysql.createConnection(dbConfig);
-
+// --- ВОТ СЮДА ВСТАВЛЯЕМ POOL ---
+const pool = mysql.createPool({
+  ...dbConfig,
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0,
+  enableKeepAlive: true,
+  keepAliveInitialDelay: 10000
+});
 db.connect(err => {
   if (err) {
     console.error('Error connecting to database:', err);
