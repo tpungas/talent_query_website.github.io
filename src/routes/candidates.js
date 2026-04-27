@@ -7,17 +7,7 @@ const mysql = require('mysql2');
 const fs = require('fs');
 const bcrypt = require('bcryptjs');
 // Database connection
-const db = mysql.createConnection({
-  host: process.env.MYSQLHOST,
-  user: process.env.MYSQLUSER,
-  password: process.env.MYSQLPASSWORD,
-  database: process.env.MYSQLDATABASE,
-  port: Number(process.env.MYSQLPORT) || 4000,
-  ssl: {
-    minVersion: 'TLSv1.2',
-    rejectUnauthorized: true
-  }
-});
+const db = global.db;
 // Configure multer for file uploads
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -237,7 +227,7 @@ router.post('/profile/:id/edit', upload.fields([
     }
     
     // Update candidate data
-    query = 'UPDATE candidates SET fullName = ?, email = ?, photo_path = ?, cv_path = ?, expectedSalary = ?, skills = ? WHERE id = ?';
+    query = 'UPDATE candidates SET full_name = ?, email = ?, photo_path = ?, cv_path = ?, expectedSalary = ?, skills = ? WHERE id = ?';
     params = [fullName, email, photoPath, cvPath, expectedSalary, skills, req.params.id];
     
     db.query(query, params, (err, result) => {
