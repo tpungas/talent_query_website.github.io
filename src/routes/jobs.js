@@ -4,18 +4,7 @@ const router = express.Router();
 const mysql = require('mysql2');
 
 // Database connection
-const db = mysql.createConnection({
-  host: process.env.MYSQLHOST,
-  user: process.env.MYSQLUSER,
-  password: process.env.MYSQLPASSWORD,
-  database: process.env.MYSQLDATABASE,
-  port: Number(process.env.MYSQLPORT) || 4000,
-  ssl: {
-    minVersion: 'TLSv1.2',
-    rejectUnauthorized: true
-  }
-});
-
+const db = global.db;
 // Get all job posts
 router.get('/', (req, res) => {
   const query = 'SELECT * FROM job_posts ORDER BY created_at DESC';
