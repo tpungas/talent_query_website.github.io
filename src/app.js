@@ -76,6 +76,9 @@ const indexRoutes = require('./routes/index');
 const blogRoutes = require('./routes/blog');
 const jobsRoutes = require('./routes/jobs');
 const candidatesRoutes = require('./routes/candidates');
+const authRoutes = require('./routes/authRoutes').router;
+
+const contactRoutes = require('./routes/contactRoutes');
 
 app.use('/', indexRoutes);
 app.use('/blog', blogRoutes);
