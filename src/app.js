@@ -26,7 +26,15 @@ app.use(session({
   saveUninitialized: true,
   cookie: { secure: false }
 }));
+// Настройка connect-flash
+app.use(flash());
 
+// Глобальные переменные для сообщений (чтобы они были видны во всех шаблонах)
+app.use((req, res, next) => {
+    res.locals.success_msg = req.flash('success');
+    res.locals.error_msg = req.flash('error');
+    next();
+});
 // EJS
 app.use(expressLayouts);
 app.set('view engine', 'ejs');
