@@ -77,7 +77,45 @@ router.get('/login', (req, res) => {
     });
 });
 
+// POST /auth/login - Обработка входа
+router.post('/login', async (req, res) => {
+    const { email, password } = req.body;
 
+    if (!email || !password) {
+        req.flash('error', 'Пожалуйста, введите email и пароль.');
+        return res.redirect('/auth/login');
+    }
+
+    try {
+        // Ищем кандидата через глобальный пул db
+        global.db.query('SELECT * FROM candidates WHERE email = ?', [email], async (err, results) => {
+            if (err || results.length === 0) {
+                req.flash('error', 'Неверный email или пароль.');
+                return res.redirect('/auth/login');
+            }
+
+            const candidate = results[0];
+            // Сравниваем пароль (убедись, что в базе столбец называется password_hash или password)
+            const isMatch = await bcrypt.compare(password, candidate.password_hash || candidate.password);
+
+            if (!isMatch) {
+                req.flash('error', 'Неверный email или пароль.');
+                return res.redirect('/auth/login');
+            }
+
+            // Успех! Сохраняем в сессию
+            req.session.candidateId = candidate.id;
+            req.session.isAuthenticated = true;
+            
+            req.flash('success', 'Вы успешно вошли!');
+            res.redirect(`/candidates/profile/${candidate.id}`);
+        });
+    } catch (error) {
+        console.error('Login error:', error);
+        req.flash('error', 'Произошла ошибка на сервере.');
+        res.redirect('/auth/login');
+    }
+});
 
 // GET /auth/logout - Handle user logout
 router.get('/logout', (req, res) => {
