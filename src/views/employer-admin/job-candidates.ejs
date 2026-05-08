@@ -1,0 +1,27 @@
+<div class="container mt-5">
+    <h2>Candidates for Job #<%= jobId %></h2>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                 <th>Email</th>
+                <th>Applied Date</th>
+                <th>Resume / Profile</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% if (candidates.length > 0) { %>
+                <% candidates.forEach(candidate => { %>
+                    <tr>
+                        
+                        <td><%= candidate.email %></td>
+                        <td><%= new Date(candidate.applied_at).toLocaleDateString() %></td>
+                        <td><a href="/candidates/<%= candidate.id %>" class="btn btn-sm btn-info">View Profile</a></td>
+                    </tr>
+                <% }) %>
+            <% } else { %>
+                <tr><td colspan="4" class="text-center">No applications yet.</td></tr>
+            <% } %>
+        </tbody>
+    </table>
+    <a href="/employer-admin/dashboard" class="btn btn-secondary">Back to Dashboard</a>
+</div>
