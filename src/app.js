@@ -84,7 +84,7 @@ app.use('/', indexRoutes);
 app.use('/blog', blogRoutes);
 app.use('/jobs', jobsRoutes);
 app.use('/candidates', candidatesRoutes);
-
+app.use('/auth', authRoutes);
 // 404
 app.use((req, res) => {
   res.status(404).render('404', { title: 'Page Not Found', page: '' });
