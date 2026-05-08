@@ -6,7 +6,8 @@ const cors = require('cors');
 const session = require('express-session');
 const dotenv = require('dotenv');
 const expressLayouts = require('express-ejs-layouts');
-
+const flash = require('connect-flash');
+// session у тебя уже есть, это хорошо
 dotenv.config();
 
 const app = express();
