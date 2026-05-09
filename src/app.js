@@ -31,8 +31,13 @@ app.use(flash());
 
 // Глобальные переменные для сообщений (чтобы они были видны во всех шаблонах)
 app.use((req, res, next) => {
-    res.locals.success_msg = req.flash('success');
-    res.locals.error_msg = req.flash('error');
+    // В левой части (после точки) пишем то, что ждет HTML
+    res.locals.messages = req.flash('success'); 
+    res.locals.errors = req.flash('error');    
+    
+    // Эти строки тоже важны для работы сайта
+    res.locals.currentUser = req.session.candidateId || null;
+    res.locals.employerUser = req.session.employerUser || null; 
     next();
 });
 // EJS
