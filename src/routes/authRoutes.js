@@ -87,10 +87,10 @@ router.post('/login', async (req, res) => {
                 return res.render('auth/login', { 
                     title: 'Login - Talent Query',
                     page: 'login',
-                    errors: ['Пользователь с таким Email не найден'], // Передаем текст ошибки
-                    formData: { email: email } // Возвращаем email в поле, чтобы он не исчез!
+                    errors: ['Пользователь с таким Email не найден'],
+                    formData: { email: email }
                 });
-            
+            } // ТЫ ПРОПУСТИЛ ЭТУ СКОБКУ
 
             const candidate = results[0];
             const isMatch = await bcrypt.compare(password, candidate.password_hash);
@@ -101,29 +101,20 @@ router.post('/login', async (req, res) => {
                     title: 'Login - Talent Query',
                     page: 'login',
                     errors: ['Неверный пароль. Попробуйте еще раз.'],
-                    formData: { email: email } // Email остается на месте!
+                    formData: { email: email }
                 });
-      // Успех! Сохраняем в сессию
+            } // И ЭТУ ТОЖЕ
+
+            // Успех! Сохраняем в сессию
             req.session.candidateId = candidate.id;
             req.session.isAuthenticated = true;
             
             req.flash('success', 'Вы успешно вошли!');
             res.redirect(`/candidates/profile/${candidate.id}`);
-        }); // Это закрывает db.query
+        }); 
     } catch (error) {
         console.error('Login error:', error);
         req.flash('error', 'Произошла ошибка на сервере.');
         res.redirect('/auth/login');
     }
-}); // Это закрывает router.post
-
-// GET /auth/logout
-router.get('/logout', (req, res) => {
-    req.session.destroy(err => {
-        if (err) return res.status(500).send('Could not log out.');
-        res.redirect('/');
-    });
 });
-
-module.exports = { router: router, isAuthenticated: isAuthenticated };    Authenticated
-
