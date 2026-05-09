@@ -77,14 +77,44 @@ router.get('/login', (req, res) => {
     });
 });
 
-// POST /auth/login - Обработка входа
 router.post('/login', async (req, res) => {
     const { email, password } = req.body;
 
-    if (!email || !password) {
-        req.flash('error', 'Пожалуйста, введите email и пароль.');
-        return res.redirect('/auth/login');
+    try {
+        global.db.query('SELECT * FROM test.candidates WHERE email = ?', [email], async (err, results) => {
+            // СЛУЧАЙ 1: Ошибка БД или пользователь не найден
+            if (err || results.length === 0) {
+                return res.render('auth/login', { 
+                    title: 'Login - Talent Query',
+                    page: 'login',
+                    errors: ['Пользователь с таким Email не найден'], // Передаем текст ошибки
+                    formData: { email: email } // Возвращаем email в поле, чтобы он не исчез!
+                });
+            }
+
+            const candidate = results[0];
+            const isMatch = await bcrypt.compare(password, candidate.password_hash);
+
+            // СЛУЧАЙ 2: Пароль не подошел
+            if (!isMatch) {
+                return res.render('auth/login', { 
+                    title: 'Login - Talent Query',
+                    page: 'login',
+                    errors: ['Неверный пароль. Попробуйте еще раз.'],
+                    formData: { email: email } // Email остается на месте!
+                });
+            }
+
+            // Успех!
+            req.session.candidateId = candidate.id;
+            req.session.isAuthenticated = true;
+            res.redirect(`/candidates/profile/${candidate.id}`);
+        });
+    } catch (error) {
+        console.error('Login error:', error);
+        res.status(500).send('Ошибка сервера');
     }
+});
 
     try {
         // Ищем кандидата через глобальный пул db
