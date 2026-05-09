@@ -103,5 +103,27 @@ router.post('/login', async (req, res) => {
                     errors: ['Неверный пароль. Попробуйте еще раз.'],
                     formData: { email: email } // Email остается на месте!
                 });
-          Authenticated
+      // Успех! Сохраняем в сессию
+            req.session.candidateId = candidate.id;
+            req.session.isAuthenticated = true;
+            
+            req.flash('success', 'Вы успешно вошли!');
+            res.redirect(`/candidates/profile/${candidate.id}`);
+        }); // Это закрывает db.query
+    } catch (error) {
+        console.error('Login error:', error);
+        req.flash('error', 'Произошла ошибка на сервере.');
+        res.redirect('/auth/login');
+    }
+}); // Это закрывает router.post
+
+// GET /auth/logout
+router.get('/logout', (req, res) => {
+    req.session.destroy(err => {
+        if (err) return res.status(500).send('Could not log out.');
+        res.redirect('/');
+    });
+});
+
+module.exports = { router: router, isAuthenticated: isAuthenticated };    Authenticated
 
