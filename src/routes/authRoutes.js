@@ -118,3 +118,16 @@ router.post('/login', async (req, res) => {
         res.redirect('/auth/login');
     }
 });
+// GET /auth/logout
+router.get('/logout', (req, res) => {
+    req.session.destroy(err => {
+        if (err) return res.status(500).send('Could not log out.');
+        res.redirect('/');
+    });
+});
+
+// ЭТО САМАЯ ВАЖНАЯ ЧАСТЬ, КОТОРОЙ СЕЙЧАС НЕТ:
+module.exports = {
+    router: router,
+    isAuthenticated: isAuthenticated
+};
