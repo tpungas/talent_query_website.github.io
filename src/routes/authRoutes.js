@@ -90,7 +90,7 @@ router.post('/login', async (req, res) => {
                     errors: ['Пользователь с таким Email не найден'], // Передаем текст ошибки
                     formData: { email: email } // Возвращаем email в поле, чтобы он не исчез!
                 });
-            }
+            
 
             const candidate = results[0];
             const isMatch = await bcrypt.compare(password, candidate.password_hash);
