@@ -1,45 +1,33 @@
 const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
-const mysql = require('mysql2');
 
-
-
-// Middleware to check if the user is authenticated
+// Middleware для проверки аутентификации
 function isAuthenticated(req, res, next) {
-    // Проверяем, существует ли сессия и установлен ли candidateId (для кандидатов)
-    // или user (для обычных пользователей/админов)
     if (req.session && (req.session.candidateId || req.session.user)) {
-        return next(); // Пользователь аутентифицирован, продолжаем
+        return next();
     }
-    // Пользователь не аутентифицирован
     req.flash('error', 'Вы должны быть авторизованы для доступа к этой странице.');
-    res.redirect('/auth/login'); // Перенаправляем на страницу входа
+    res.redirect('/auth/login');
 }
 
-// --- Auth Routes ---
+// --- Маршруты регистрации ---
 
-// GET /auth/register - Show registration form
 router.get('/register', (req, res) => {
     res.render('auth/register', { title: 'Register - Talent Query', page: 'register', errors: req.flash('error'), formData: {} });
 });
 
-// POST /auth/register - Handle user registration
-// Этот маршрут предназначен для ОБЩЕЙ регистрации пользователей (админов, работодателей),
-// а регистрация кандидатов обрабатывается в `routes/candidates.js`
 router.post('/register', async (req, res) => {
     const { username, email, password, role } = req.body;
-
     if (!username || !email || !password || !role) {
         req.flash('error', 'Please fill in all fields.');
         return res.redirect('/auth/register');
     }
 
     try {
-        db.query('SELECT * FROM users WHERE username = ? OR email = ?', [username, email], async (err, results) => {
+        global.db.query('SELECT * FROM users WHERE username = ? OR email = ?', [username, email], async (err, results) => {
             if (err) {
-                console.error('Error checking user existence:', err);
-                req.flash('error', 'Database error during registration.');
+                req.flash('error', 'Database error.');
                 return res.redirect('/auth/register');
             }
             if (results.length > 0) {
@@ -48,12 +36,10 @@ router.post('/register', async (req, res) => {
             }
 
             const hashedPassword = await bcrypt.hash(password, 10);
-
-            db.query('INSERT INTO users (username, email, password, role) VALUES (?, ?, ?, ?)',
-                [username, email, hashedPassword, role], (err, result) => {
+            global.db.query('INSERT INTO users (username, email, password, role) VALUES (?, ?, ?, ?)',
+                [username, email, hashedPassword, role], (err) => {
                     if (err) {
-                        console.error('Error inserting new user:', err);
-                        req.flash('error', 'Failed to register user.');
+                        req.flash('error', 'Failed to register.');
                         return res.redirect('/auth/register');
                     }
                     req.flash('success', 'Registration successful! Please login.');
@@ -61,19 +47,18 @@ router.post('/register', async (req, res) => {
                 });
         });
     } catch (error) {
-        console.error('Registration error:', error);
-        req.flash('error', 'An unexpected error occurred while registering.');
         res.redirect('/auth/register');
     }
 });
 
-// GET /auth/login - Show login form
+// --- Маршруты входа ---
+
 router.get('/login', (req, res) => {
     res.render('auth/login', {
         title: 'Login - Talent Query',
         page: 'login',
-        errors: req.flash('error'), // Передаем сообщения об ошибках
-        messages: req.flash('success') // Передаем сообщения об успехе
+        errors: req.flash('error'),
+        messages: req.flash('success')
     });
 });
 
@@ -82,7 +67,6 @@ router.post('/login', async (req, res) => {
 
     try {
         global.db.query('SELECT * FROM test.candidates WHERE email = ?', [email], async (err, results) => {
-            // СЛУЧАЙ 1: Ошибка БД или пользователь не найден
             if (err || results.length === 0) {
                 return res.render('auth/login', { 
                     title: 'Login - Talent Query',
@@ -90,12 +74,11 @@ router.post('/login', async (req, res) => {
                     errors: ['Пользователь с таким Email не найден'],
                     formData: { email: email }
                 });
-            } // ТЫ ПРОПУСТИЛ ЭТУ СКОБКУ
+            }
 
             const candidate = results[0];
-            const isMatch = await bcrypt.compare(password, candidate.password_hash);
+            const isMatch = await bcrypt.compare(password, candidate.password_hash || candidate.password);
 
-            // СЛУЧАЙ 2: Пароль не подошел
             if (!isMatch) {
                 return res.render('auth/login', { 
                     title: 'Login - Talent Query',
@@ -103,22 +86,20 @@ router.post('/login', async (req, res) => {
                     errors: ['Неверный пароль. Попробуйте еще раз.'],
                     formData: { email: email }
                 });
-            } // И ЭТУ ТОЖЕ
+            }
 
-            // Успех! Сохраняем в сессию
             req.session.candidateId = candidate.id;
             req.session.isAuthenticated = true;
-            
-            req.flash('success', 'Вы успешно вошли!');
             res.redirect(`/candidates/profile/${candidate.id}`);
         }); 
     } catch (error) {
         console.error('Login error:', error);
-        req.flash('error', 'Произошла ошибка на сервере.');
         res.redirect('/auth/login');
     }
 });
-// GET /auth/logout
+
+// --- Выход ---
+
 router.get('/logout', (req, res) => {
     req.session.destroy(err => {
         if (err) return res.status(500).send('Could not log out.');
@@ -126,7 +107,7 @@ router.get('/logout', (req, res) => {
     });
 });
 
-// ЭТО САМАЯ ВАЖНАЯ ЧАСТЬ, КОТОРОЙ СЕЙЧАС НЕТ:
+// Экспорт (строго один раз в конце файла)
 module.exports = {
     router: router,
     isAuthenticated: isAuthenticated
