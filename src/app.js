@@ -44,7 +44,7 @@ app.use(expressLayouts);
 // Подключение маршрутов
 const indexRoutes = require('./routes/index');
 const blogRoutes = require('./routes/blog');
-const jobsRoutes = require('./routes/jobsRoutes');
+const jobsRoutes = require('./routes/jobs');
 const employerAuthRoutes = require('./routes/employerAuthRoutes'); 
 // Новый файл
 const { isAuthenticated } = require('./routes/authRoutes'); 
