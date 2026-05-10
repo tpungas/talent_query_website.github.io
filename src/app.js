@@ -1,111 +1,162 @@
+// app.js (или server.js)
+const db = require('./db'); // Проверь правильность пути до твоего файла базы данных
 const express = require('express');
-const mysql = require('mysql2');
 const path = require('path');
-const multer = require('multer');
-const cors = require('cors');
 const session = require('express-session');
-const dotenv = require('dotenv');
+const PORT = process.env.PORT || 3000;
 const expressLayouts = require('express-ejs-layouts');
 const flash = require('connect-flash');
-// session у тебя уже есть, это хорошо
-dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 10000;
-
-// Middleware
-app.use(cors());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname, '../public')));
-
-// Session
+// Настройка сессий
 app.use(session({
-  secret: 'talent_query_secret',
+  secret: 'chinaspainportugal', // Используйте один секрет
   resave: false,
-  saveUninitialized: true,
-  cookie: { secure: false }
+  saveUninitialized: false,
+  cookie: { 
+    maxAge: 24 * 60 * 60 * 1000, // 24 часа. Это обеспечит выполнение ТЗ "оставаться залогиненным"
+    secure: false // true только если у вас HTTPS (на локалке false)
+  }
 }));
+
+
 // Настройка connect-flash
 app.use(flash());
 
-// Глобальные переменные для сообщений (чтобы они были видны во всех шаблонах)
+// Конфигурация для работы с POST-запросами и статическими файлами
+app.use(express.static(path.join(__dirname, '..', 'public')));
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 app.use((req, res, next) => {
-    // В левой части (после точки) пишем то, что ждет HTML
-    res.locals.messages = req.flash('success'); 
-    res.locals.errors = req.flash('error');    
-    
-    // Эти строки тоже важны для работы сайта
+    // Передаем в EJS данные и кандидата, и работодателя/админа
     res.locals.currentUser = req.session.candidateId || null;
     res.locals.employerUser = req.session.employerUser || null; 
     next();
 });
-// EJS
-app.use(expressLayouts);
-app.set('view engine', 'ejs');
+
+// Установка EJS в качестве шаблонизатора
 app.set('views', path.join(__dirname, 'views'));
-app.set('layout', 'layout');
+app.set('view engine', 'ejs');
 
-// --- DATABASE CONNECTION (FIXED FOR RENDER/TiDB) ---
+// Использование middleware express-ejs-layouts
+app.use(expressLayouts);
 
-const dbConfig = {
-  host: process.env.MYSQLHOST,
-  user: process.env.MYSQLUSER,
-  password: process.env.MYSQLPASSWORD,
-  database: process.env.MYSQLDATABASE,
-  port: Number(process.env.MYSQLPORT),
-  ssl: {
-    minVersion: 'TLSv1.2',
-    rejectUnauthorized: true
-  }
-};
-
-// Создаем пул соединений вместо одиночного db
-const pool = mysql.createPool({
-  ...dbConfig,
-  waitForConnections: true,
-  connectionLimit: 10,
-  queueLimit: 0,
-  enableKeepAlive: true,
-  keepAliveInitialDelay: 10000
-});
-
-// Проверка подключения (выведется в логи Render)
-pool.getConnection((err, connection) => {
-  if (err) {
-    console.error('--- DATABASE ERROR ---');
-    console.error(err);
-  } else {
-    console.log('Successfully connected to TiDB Cloud via Pool!');
-    connection.release();
-  }
-});
-
-// СУПЕР-ВАЖНО: Делаем пул доступным для всех твоих роутов
-// Мы заменяем старую переменную 'db' этим пулом
-global.db = pool;
-
-// --- Routes ---
+// Подключение маршрутов
 const indexRoutes = require('./routes/index');
 const blogRoutes = require('./routes/blog');
-const jobsRoutes = require('./routes/jobs');
+const jobsRoutes = require('./routes/jobsRoutes');
+const employerAuthRoutes = require('./routes/employerAuthRoutes'); 
+// Новый файл
+const { isAuthenticated } = require('./routes/authRoutes'); 
 const candidatesRoutes = require('./routes/candidates');
 const authRoutes = require('./routes/authRoutes').router;
 
 const contactRoutes = require('./routes/contactRoutes');
 
+app.use('/', contactRoutes);
+
+// Use routes
 app.use('/', indexRoutes);
 app.use('/blog', blogRoutes);
 app.use('/jobs', jobsRoutes);
 app.use('/candidates', candidatesRoutes);
 app.use('/auth', authRoutes);
-// 404
-app.use((req, res) => {
-  res.status(404).render('404', { title: 'Page Not Found', page: '' });
+app.use('/', employerAuthRoutes); // Подключаем маршруты аутентификации работодателей
+
+// Пример простого роута для главной страницы (если у вас его нет)
+app.get('/', (req, res) => {
+  res.render('index', { title: 'Welcome to Talent Query' });
 });
 
-app.listen(PORT, '0.0.0.0', () => {
+const mysql = require('mysql2/promise');
+const bcrypt = require('bcrypt');
+const dbConfig = {
+  host: process.env.MYSQLHOST || 'localhost',
+  user: process.env.MYSQLUSER || 'root',
+  password: process.env.MYSQLPASSWORD || '',
+  database: process.env.MYSQLDATABASE || 'talent_query_db',
+  port: process.env.MYSQLPORT || 3306,
+  // Настройка SSL: включаем только если мы НЕ на локалхосте
+  ssl: (process.env.MYSQLHOST && process.env.MYSQLHOST !== 'localhost') ? {
+    minVersion: 'TLSv1.2',
+    rejectUnauthorized: true
+  } : null 
+};
+// Создаем функцию, которой не хватало
+async function getConnection() {
+  return await mysql.createConnection(dbConfig);
+}
+
+// Функции для взаимодействия с базой данных
+
+
+// Маршрут для обработки запросов на вход кандидата
+app.post('/auth/login', async (req, res) => {
+  const { email, password } = req.body;
+
+  if (!email || !password) {
+    req.flash('error', 'Пожалуйста, введите email и пароль.');
+    return res.redirect('/auth/login');
+  }
+
+  let connection;
+  try {
+    connection = await getConnection();
+    const candidate = await db.getCandidateByEmail(email);
+
+    if (!candidate) {
+      req.flash('error', 'Неверный email или пароль.');
+      return res.redirect('/auth/login');
+    }
+
+    // В базе данных столбец с хешированным паролем называется 'password_hash'
+    const isMatch = await bcrypt.compare(password, candidate.password_hash);
+
+    if (!isMatch) {
+      req.flash('error', 'Неверный email или пароль.');
+      return res.redirect('/auth/login');
+    }
+
+    // Успешная аутентификация: Устанавливаем сессию
+    req.session.candidateId = candidate.id;
+    req.session.isAuthenticated = true; // Используйте это для проверки аутентификации
+// --- ДОБАВЬТЕ ЭТИ СТРОКИ ДЛЯ ЛОГИРОВАНИЯ ---
+    console.log('Сессия после успешного входа:', req.session);
+    console.log('Candidate ID в сессии:', req.session.candidateId);
+    console.log('isAuthenticated в сессии:', req.session.isAuthenticated);
+    // --- КОНЕЦ ЛОГИРОВАНИЯ ---
+
+
+    req.flash('success', 'Login successful!');
+    res.redirect(`/candidates/profile/${candidate.id}`); // Перенаправляем на страницу профиля кандидата
+  } catch (error) {
+    console.error('Error processing candidate login:', error);
+    req.flash('error', 'An error occurred on the server. Please try again later.');
+    res.redirect('/auth/login');
+  } finally {
+    if (connection) connection.end();
+  }
+});
+
+// Добавляем маршрут для главной страницы кандидатов, которая требует аутентификации
+// Например, это может быть дашборд кандидата
+app.get('/candidates/dashboard', isAuthenticated, (req, res) => {
+  res.render('candidates/dashboard', {
+    title: 'Candidate Dashboard',
+    message: `Welcome, Candidate with ID: ${req.session.candidateId}!`
+  });
+});
+app.get('/candidates/register', (req, res) => {
+    if (req.isAuthenticated()) { 
+              res.render('candidates/register', { candidateData: req.user });
+    
+  
+} else {
+        // Если не авторизован, отображаем пустую форму регистрации
+        res.render('candidates/register', { candidateData: null });
+    }
+});
+
+app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
-
-module.exports = app;
