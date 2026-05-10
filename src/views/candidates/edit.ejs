@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero__content">
+                <h1>Edit Candidate</h1>
+                <p>Register your talent!</p>
+            </div>
+        </div>
+    </section>
+      
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h2></h2>
+                </div>
+                <div class="card-body">
+                    <h1>Edit Candidate: <%= candidate.name %></h1>
+
+<form action="/candidates/<%= candidate.id %>?_method=PUT" method="POST">
+    <div>
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" value="<%= candidate.name %>" required>
+    </div>
+
+    <div>
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" value="<%= candidate.email %>" required>
+    </div>
+
+    <div>
+        <label for="phone">Phone:</label>
+        <input type="tel" id="phone" name="phone" value="<%= candidate.phone %>">
+    </div>
+
+    <div>
+        <label for="status">Status:</label>
+        <select id="status" name="status">
+            <option value="Active" <%= candidate.status === 'Active' ? 'selected' : '' %>>Active</option>
+            <option value="Inactive" <%= candidate.status === 'Inactive' ? 'selected' : '' %>>Inactive</option>
+            <option value="Hired" <%= candidate.status === 'Hired' ? 'selected' : '' %>>Hired</option>
+            </select>
+    </div>
+
+    <button type="submit">Save Changes</button>
+    <a href="/candidates/<%= candidate.id %>">Cancel</a> </form>
+</div>
+                        
+                        
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
