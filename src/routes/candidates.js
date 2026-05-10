@@ -7,7 +7,7 @@ const mysql = require('mysql2');
 const fs = require('fs');
 const bcrypt = require('bcryptjs');
 // Database connection
-const db = global.db;
+const db = require('../db');
 // Configure multer for file uploads
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
